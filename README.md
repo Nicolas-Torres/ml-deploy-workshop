@@ -145,24 +145,9 @@ kubectl get svc ml-api-svc
 
 # Ver HPA
 kubectl get hpa
-
-# Logs en tiempo real
-kubectl logs -f deploy/ml-api
 ```
 
-### 5. Probar el servicio
-
-```bash
-# Obtener URL de minikube
-URL=$(minikube service ml-api-svc --url)
-
-curl $URL/health
-curl -X POST $URL/predict \
-  -H "Content-Type: application/json" \
-  -d '{"sepal_length":5.1,"sepal_width":3.5,"petal_length":1.4,"petal_width":0.2}'
-```
-
-### 6. Prueba de escalado
+### 5. Prueba de escalado
 
 ```bash
 # Generar carga (en otra terminal)
@@ -206,5 +191,4 @@ kubectl describe deployment ml-api            # Detalle del deployment
 
 ```bash
 kubectl delete -f k8s/
-minikube stop
 ```

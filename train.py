@@ -23,6 +23,13 @@ CLASSES = ["setosa", "versicolor", "virginica"]
 def train() -> None:
     print("🔄 Cargando datos...")
     iris = load_iris()
+    print(iris.data)      # array con las 150 muestras y sus 4 features
+    print(iris.target)    # array con las etiquetas (0, 1, 2) de cada muestra
+
+    print(iris.feature_names)   # ['sepal length (cm)', 'sepal width (cm)', ...]
+    print(iris.target_names)    # ['setosa' 'versicolor' 'virginica']
+   
+
     X, y = iris.data, iris.target
 
     X_train, X_test, y_train, y_test = train_test_split(

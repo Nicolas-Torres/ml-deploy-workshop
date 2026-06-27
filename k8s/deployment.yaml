@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: ml-api
-          image: ghcr.io/TU_USUARIO/ml-deploy-workshop:latest
+          image: ghcr.io/edanpiro/ml-deploy-workshop:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
