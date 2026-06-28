@@ -6,7 +6,7 @@ metadata:
     kubernetes.io/ingress.class: azure/application-gateway
 spec:
   rules:
-    - host: myapp-prod-ingress.eastus2.cloudapp.azure.com
+    - host: ntorresv-prod-ingress.eastus2.cloudapp.azure.com
       http:
         paths:
           - path: /
