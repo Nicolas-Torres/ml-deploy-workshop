@@ -1,4 +1,4 @@
-name: CI/CD Pipeline – Iris Classifier
+name: CI/CD Pipeline - Iris Classifier
 
 on:
   push:
@@ -20,21 +20,25 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar Python 3.11
-        uses: actions/setup-python@v5
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
-          cache: "pip"
+          version: "0.11.23"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      
+      - name: Configurar Python (según .python-version)
+        run: uv python install
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt
+        run: uv sync --locked
 
       - name: Entrenar modelo (genera models/iris_model.pkl)
-        run: python train.py
+        run: uv run train.py
 
       - name: Ejecutar tests con cobertura
         run: |
-          pytest tests/ -v --tb=short \
+          uv run pytest tests/ -v --tb=short \
             --cov=app --cov-report=term-missing \
             --cov-fail-under=80
 
@@ -60,16 +64,17 @@ jobs:
       - name: Checkout código
         uses: actions/checkout@v4
 
-      - name: Configurar Python para entrenar modelo
-        uses: actions/setup-python@v5
+      - name: Instalar uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
-          cache: "pip"
+          version: "0.11.23"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       - name: Instalar dependencias y entrenar modelo
         run: |
-          pip install -r requirements.txt
-          python train.py
+          uv sync --locked
+          uv run train.py
 
       - name: Login a GitHub Container Registry
         uses: docker/login-action@v3
