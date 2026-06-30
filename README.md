@@ -42,12 +42,15 @@ ml-deploy-workshop/
 
 ## 🐍 DÍA 1 – Docker y CI/CD
 
-### 1. Instalar dependencias y entrenar el modelo
+### 0. Instalar uv
+  https://docs.astral.sh/uv/getting-started/installation/
+
+### 1. Iniciar proyecto, instalar dependencias y entrenar el modelo
 
 ```bash
-pip install -r requirements.txt
-python train.py
-# → Genera models/iris_model.pkl
+uv init                      # -> inicia proyecto con uv
+uv add -r requirements.txt   # -> crea .venv e instala dependencias 
+uv run train.py              # -> Genera models/iris_model.pkl
 ```
 
 ### 2. Ejecutar el servicio localmente
@@ -78,10 +81,13 @@ curl -X POST http://localhost:8000/predict \
 
 ```bash
 # Tests básicos
-pytest tests/ -v --tb=short
+uv run pytest tests/ -v --tb=short
 
 # Con reporte de cobertura
-pytest tests/ -v --cov=app --cov-report=term-missing
+uv run pytest tests/ -v --cov=app --cov-report=term-missing
+
+# Determina cobertura
+uv run pytest tests/ -v --tb=short --cov=app --cov-report=term-missing --cov-fail-under=80
 ```
 
 ### 5. Construir y ejecutar con Docker
