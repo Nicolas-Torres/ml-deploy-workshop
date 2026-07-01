@@ -1,0 +1,38 @@
+# Entornos virtuales y cache de Python
+.venv
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+
+# Artefactos de cobertura de tests
+.coverage
+coverage.xml
+htmlcov/
+
+# Control de versiones y CI (no se necesitan dentro del build)
+.git/
+.github/
+
+# Documentación (no se usa en la imagen)
+*.md
+docs/
+
+# Configuración local / IDE
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secretos y variables de entorno — NUNCA deben viajar al build context
+.env
+.env.*
+*.pem
+*.key
+
+# Manifiestos de Kubernetes (los usa cd.yml vía kubectl, no docker build)
+k8s/
+
+# Tests (corren en CI fuera del container, no dentro de la imagen)
+tests/
