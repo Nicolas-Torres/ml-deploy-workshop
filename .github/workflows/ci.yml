@@ -3,8 +3,14 @@ name: CI/CD Pipeline - Iris Classifier
 on:
   push:
     branches: [main, develop]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 
 env:
   REGISTRY: ghcr.io
