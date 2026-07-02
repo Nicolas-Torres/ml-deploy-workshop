@@ -1,4 +1,4 @@
-# Qué pasa por detrás
+**2. docker build — Qué pasa por detrás**
 ```
 docker build -t curso-mlops:v1 .
 ```
