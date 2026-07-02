@@ -8,25 +8,36 @@ Proyecto completo para el taller de despliegue automatizado de modelos Machine L
 
 ```
 ml-deploy-workshop/
+├── .github/
+│   └── workflows/                # Pipeline CI/CD completo
+│       ├── ci.yml
+│       └── cd.yml
 ├── app/
 │   ├── __init__.py
-│   ├── main.py          # FastAPI: endpoints /health y /predict
-│   └── model.py         # Carga y lógica de inferencia
+│   ├── main.py                   # FastAPI: endpoints /health y /predict
+│   └── model.py                  # Carga y lógica de inferencia
+├── docs/
+│   ├── architecture.drawio.png   # Arquitectura
+│   ├── docker_build.md           
+│   └── workflow_code.md          # Flujo de trabajo CI/CD
+├── k8s/
+│   ├── deployment.yaml           # Deployment con 2 réplicas
+│   ├── hpa.yaml                  # Horizontal Pod Autoscaler
+│   ├── ingress.yaml              # 
+│   └── service.yaml              # Service LoadBalancer
 ├── models/
-│   └── iris_model.pkl   # Generado por train.py
+│   └── iris_model.pkl            # Generado por train.py
 ├── tests/
 │   ├── __init__.py
-│   └── test_api.py      # Suite completa con pytest
-├── k8s/
-│   ├── deployment.yaml  # Deployment con 2 réplicas
-│   ├── service.yaml     # Service LoadBalancer
-│   └── hpa.yaml         # Horizontal Pod Autoscaler
-├── .github/
-│   └── workflows/
-│       └── ci.yml       # Pipeline CI/CD completo
-├── train.py             # Entrena y guarda el modelo
-├── requirements.txt
-└── Dockerfile           # Multi-stage build
+│   └── test_api.py               # Suite completa con pytest
+├── train.py                      # Entrena y guarda el modelo
+├── .dockerignore
+├── .gitignore
+├── .python-version
+├── Dockerfile                    # Multi-stage build
+├── pyproject.toml
+├── README.md
+└── uv.lock
 ```
 
 ---
