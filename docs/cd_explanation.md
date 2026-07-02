@@ -1,0 +1,14 @@
+## CD - Deploy a AKS
+
+**Consideraciones:**
+
+Necesitas tener configurados en el repo los secrets y variables que mencioné para Azure, o el CD fallará en el primer paso de login. También conviene revisar si realmente quieres admin: true en aks-set-context, dado el principio de menor privilegio. Si trabajas en equipo, podrías además proteger este workflow con un "Environment" de GitHub que requiera aprobación manual antes de correr, como capa extra sobre el ya manual workflow_dispatch.
+
+**Flujo:**
+
+Este despliega a Azure Kubernetes Service. Lo interesante es el trigger: solo tiene `workflow_dispatch` activo, que significa ejecución manual desde la pestaña Actions de GitHub (o vía API/CLI). El trigger automático por push a `main` está comentado (`# push: # branches: [main]`), así que ahora mismo nadie despliega a producción automáticamente con un push; alguien tiene que entrar a GitHub y darle "Run workflow" a propósito. Es una buena práctica de seguridad para un entorno productivo, aunque vale la pena que sepas que es una decisión consciente, no un descuido.
+El job `deploy` hace login a Azure usando un Service Principal, armando el JSON de credenciales a partir de `vars` (variables no secretas: `AZURE_CLIENT_ID`, `AZURE_SUBSCRIPTION_ID`, `AZURE_TENANT_ID`) y un secret (`AZURE_CLIENT_SECRET`). Para que esto funcione, esos cuatro valores tienen que estar configurados en el repo (Settings → Secrets and variables → Actions), si no el workflow falla en este paso. Luego obtiene las credenciales del clúster AKS con `admin: true`, lo cual pide el kubeconfig con privilegios de administrador del clúster — vale la pena confirmar que esto sea realmente necesario, porque es más privilegio del mínimo indispensable; si el Service Principal solo necesita hacer `kubectl apply`, normalmente no hace falta el modo admin. Después instala `kubelogin` y convierte el kubeconfig al modo de autenticación por Service Principal (`spn`), que es el mecanismo que usa AKS con Azure AD para autenticar `kubectl` sin contraseña interactiva. Finalmente aplica los manifiestos que estén en la carpeta `k8s/` del repo con `kubectl apply -f k8s/`, y espera a que el rollout del deployment llamado `ml-api` termine, con un timeout de 120 segundos — si el rollout no termina en ese tiempo (por ejemplo, porque el pod no levanta), el job falla.
+
+**Quién usa esto y cuándo**
+
+ci.yml lo dispara automáticamente GitHub cada vez que alguien (tú, un colaborador, o un bot) hace push o abre un PR; no necesita intervención humana salvo revisar si falló. cd.yml lo dispara una persona con permisos de escritura en el repo, manualmente, cuando decide que es momento de desplegar la imagen ya construida y publicada por el CI hacia el clúster de AKS. Importante: cd.yml no construye la imagen, asume que ya existe en GHCR (publicada por ci.yml) y que los manifiestos en k8s/ apuntan a ese registro y a un tag específico.
